@@ -1,3 +1,6 @@
-* {
-	
-}
+#map {
+	position: relative;
+	padding-bottom: 75%; /* 4:3 ratio*/
+	height: 0;
+	overflow: hidden;
+}  
