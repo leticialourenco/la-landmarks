@@ -1,6 +1,6 @@
 'use strict';
 
-var locations = [
+var initialLocations = [
 	{
 		title: 'Capella Salon',
 		lat: 34.144981,
@@ -27,7 +27,7 @@ var locations = [
 		lng: -118.412841
 	},
 	{
-		title: 'Studio City Tattoo and Body Piercing',
+		title: 'SC Tattoo and Body Piercing',
 		lat: 34.140534,
 		lng: -118.371331
 	},
@@ -53,20 +53,45 @@ function initMap() {
 	*/
 	var myLatLng;
 	var marker;
-	var location;
-	var locationsQnt = locations.length;
-	/* Gets objects from locations array and 
+	var loc;
+	var locationsQnt = initialLocations.length;
+	/* Gets objects from initialLocations array and 
 	   uses its data to create markers
 	*/
 	for (var i = 0; i < locationsQnt; i++){
-		location = locations[i];
-		myLatLng = {lat: location.lat, lng: location.lng}
+		loc = initialLocations[i];
+		myLatLng = {lat: loc.lat, lng: loc.lng}
 		marker = new google.maps.Marker({
 			position: myLatLng,
 			map: map,
-			title: location.title
+			title: loc.title
 		});
 	}
 }
 
+/* Sets up data model for locations
+*/
+var Location = function(data){
+	this.title = ko.observable(data.title);
+	this.lat = ko.observable(data.lat);
+	this.lng = ko.observable(data.lng);
+}
+
+/* Sets up viewModel
+*/
+var ViewModel = function() {
+	var self = this;
+	/* Creates an empty observable array
+	*/
+	this.locationList = ko.observableArray([]);
+	/* Populates the empty observable array with Location objects
+	*/
+	initialLocations.forEach(function(locationItem) {
+		self.locationList.push( new Location(locationItem) );
+	});
+	//this.currentLocation = ko.observable(this.locationList()[0]);
+}
+/* Links view associations with ViewModel
+*/
+ko.applyBindings(new ViewModel());
 

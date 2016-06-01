@@ -1,6 +1,61 @@
+@import url(https://fonts.googleapis.com/css?family=Oswald:400,300,700|Lato:400,100,300,700,900);
+
+body, html{
+	height: 100%;
+	font-family: 'Lato', sans-serif;
+	overflow: hidden;
+}
+
+h3 {
+	color: #fff;
+	padding: 15px 10px 30px;
+	text-transform: uppercase;
+	letter-spacing: 2px;
+	font-family: 'Oswald', sans-serif;
+	font-size: 30px;
+	text-align: center;
+}
+
 #map {
 	position: relative;
 	padding-bottom: 75%; /* 4:3 ratio*/
 	height: 0;
 	overflow: hidden;
 }  
+
+.sidebar {
+	background:#333;
+	padding: 0;
+	height: 0;
+	padding-bottom: 75%; /* 4:3 ratio*/
+}
+
+.sidebar-list {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.sidebar-list li,
+.sidebar-list a {
+	width: 100%;
+	padding: 15px;
+	color: #ccc;
+	cursor: pointer;
+	text-decoration: none;
+}
+
+.sidebar-list li:hover,
+.sidebar-list li:focus,
+.sidebar-list li:active {
+	background: #F29A1A;
+}
+
+.sidebar-list a:hover,
+.sidebar-list a:focus,
+.sidebar-list a:active,
+.sidebar-list li:hover a,
+.sidebar-list li:focus a,
+.sidebar-list li:active a {
+	color: #fff;
+}
