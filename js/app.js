@@ -38,60 +38,87 @@ var initialLocations = [
 	}
 ];
 
-/* Google Maps API callback
-*/
-function initMap() {
-	/* Defines default center of map
-	   center is NOT a marker
-	*/
-	var mapCenter = {lat: 34.147843, lng: -118.400035};
-	var map = new google.maps.Map(document.getElementById('map'), {
-		zoom: 14,
-		center: mapCenter
-	});
-	/* Declares helper variables
-	*/
-	var myLatLng;
-	var marker;
-	var loc;
-	var locationsQnt = initialLocations.length;
-	/* Gets objects from initialLocations array and 
-	   uses its data to create markers
-	*/
-	for (var i = 0; i < locationsQnt; i++){
-		loc = initialLocations[i];
-		myLatLng = {lat: loc.lat, lng: loc.lng}
-		marker = new google.maps.Marker({
-			position: myLatLng,
-			map: map,
-			title: loc.title
-		});
-	}
-}
-
 /* Sets up data model for locations
-*/
-var Location = function(data){
+ */
+var Location = function(data) {
 	this.title = ko.observable(data.title);
 	this.lat = ko.observable(data.lat);
 	this.lng = ko.observable(data.lng);
 }
 
 /* Sets up viewModel
-*/
+ */
 var ViewModel = function() {
 	var self = this;
 	/* Creates an empty observable array
-	*/
+	 */
 	this.locationList = ko.observableArray([]);
 	/* Populates the empty observable array with Location objects
-	*/
+	 */
 	initialLocations.forEach(function(locationItem) {
 		self.locationList.push( new Location(locationItem) );
 	});
-	//this.currentLocation = ko.observable(this.locationList()[0]);
+	/* Declares a variable (no parameter needed)
+ 	 */
+	this.currentLocation = ko.observable();
+	/* Called when some location on the view list is clicked
+	 * sets the currentLocation to the clicked object
+	 */
+	this.openInfo = function(clickedLocation) {
+		self.currentLocation(clickedLocation);
+		console.log('called open info');
+	};
 }
 /* Links view associations with ViewModel
-*/
-ko.applyBindings(new ViewModel());
+ */
+ko.applyBindings( new ViewModel() );
 
+/* Google Maps API callback
+ */
+function initMap() {
+	/* Defines default center of map
+	 * center is NOT a marker
+	 */
+	var mapCenter = {lat: 34.150332, lng: -118.387729};
+	var map = new google.maps.Map(document.getElementById('map'), {
+		zoom: 14,
+		center: mapCenter
+	});
+	/* Declares helper variables
+	 */
+	var myLatLng;
+	var marker;
+	var loc;
+	var locationsQnt = initialLocations.length;
+	var infowindow = null;
+	/* Blank pre-setup for the infowindow
+	 */
+	infowindow = new google.maps.InfoWindow({
+		content: ''
+	});
+	/* Gets objects from initialLocations array and 
+	 *  uses its data to create markers
+	 */
+	for (var i = 0; i < locationsQnt; i++){
+		/* Gets values from the JSON data
+		 * and store 'em on vars
+		 */
+		loc = initialLocations[i];
+		myLatLng = {lat: loc.lat, lng: loc.lng}
+		/* Creates a marker each iteration
+		 * containing the data from initialLocations
+		 */
+		marker = new google.maps.Marker({
+			position: myLatLng,
+			map: map,
+			title: loc.title
+		});
+		/* Creates a listener to each marker
+		 * to be opened its infowindow on click event
+		 */
+		marker.addListener('click', function() {
+			infowindow.setContent(this.title);
+			infowindow.open(map, this);
+		});
+	}
+}

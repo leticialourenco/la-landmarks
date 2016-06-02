@@ -16,12 +16,10 @@
 					<h3>Studio City<br>Highlights</h3>
 
 					<ul data-bind="foreach: locationList" class="sidebar-list">
-						<li><a data-bind="text: title"></a></li>
+						<li><a data-bind="text: title, click: $parent.openInfo"></a></li>
 					</ul>
 				</div>
-				<div class="col-xs-9" id="map">
-					
-				</div>
+				<div class="col-xs-9" id="map"></div>
 			</div>
 		</div>
 	</div>
