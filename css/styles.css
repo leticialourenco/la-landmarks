@@ -18,7 +18,7 @@ h3 {
 
 #map {
 	position: relative;
-	padding-bottom: 75%; /* 4:3 ratio*/
+	padding-bottom: 75%; /* 4:3 ratio */
 	height: 0;
 	overflow: hidden;
 }  
@@ -27,13 +27,33 @@ h3 {
 	background:#333;
 	padding: 0;
 	height: 0;
-	padding-bottom: 75%; /* 4:3 ratio*/
+	padding-bottom: 75%; /* 4:3 ratio */
+}
+
+.dropdown-toggle,
+.dropdown-menu {
+	width: 80%;
+	margin-left: 10%;
+	border-radius: 3px;
+	background: #fff;
+	text-transform: uppercase;
+	font-size: 12px;
+	letter-spacing: 1px;
+} 
+
+.dropdown-menu li {
+	padding: 0;
+	margin: 0;
+}
+
+.dropdown-menu a {
+	padding: 10px 20px!important;
 }
 
 .sidebar-list {
 	list-style: none;
 	padding: 0;
-	margin: 0;
+	margin: 30px 0 0;
 }
 
 .sidebar-list li,
@@ -47,7 +67,8 @@ h3 {
 
 .sidebar-list li:hover,
 .sidebar-list li:focus,
-.sidebar-list li:active {
+.sidebar-list li:active,
+.sidebar-list .active {
 	background: #F29A1A;
 }
 
@@ -56,6 +77,7 @@ h3 {
 .sidebar-list a:active,
 .sidebar-list li:hover a,
 .sidebar-list li:focus a,
-.sidebar-list li:active a {
+.sidebar-list li:active a,
+.sidebar-list .active a {
 	color: #fff;
 }
