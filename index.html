@@ -21,10 +21,10 @@
 					    <span class="caret"></span>
 					  </button>
 					  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-					    <li><a href="#">Restaurants</a></li>
-					    <li><a href="#">Gym</a></li>
-					    <li><a href="#">Movie Theathers</a></li>
-					    <li><a href="#">Shops</a></li>
+					    <li><a href="#" data-bind="click: filterByClass('entertainment')">Entertainment</a></li>
+					    <li><a href="#" data-bind="click: filterByClass('gym')">Gym</a></li>
+					    <li><a href="#" data-bind="click: filterByClass('restaurant')">Restaurants</a></li>
+					    <li><a href="#" data-bind="click: filterByClass('shop')">Shops</a></li>		    
 					    <li role="separator" class="divider"></li>
 					    <li><a href="#">See All</a></li>
 					  </ul>
@@ -39,10 +39,10 @@
 		</div>
 	</div>
     
-    <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+    <script src="js/lib/jquery-2.2.4.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-   	<script src="https://maps.googleapis.com/maps/api/js?callback=initMap"
-        async defer></script>
+   	<!--<script src="https://maps.googleapis.com/maps/api/js?callback=initMap" async defer></script>-->
+	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
 	<script src="js/lib/knockout-3.4.0.js"></script>
 	<script src="js/app.js"></script>
 </body>

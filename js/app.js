@@ -5,135 +5,140 @@ var initialLocations = [
 		title: 'Capella Salon',
 		lat: 34.144981,
 		lng: -118.414361,
+		category: 'shop',
 		index: 0
 	},
 	{
 		title: 'Lemonade Studio City',
 		lat: 34.143106,
 		lng: -118.403175,
+		category: 'restaurant',
 		index: 1
 	},
 	{
 		title: 'Universal CityWalk',
 		lat: 34.136491,
 		lng: -118.353186,
+		category: 'entertainment',
 		index: 2
 	},
 	{
 		title: 'Crossfit Studio City',
 		lat: 34.141580,
 		lng: -118.387551,
+		category: 'gym',
 		index: 3
 	},
 	{
 		title: 'Harvard-WestLake Film Festival',
 		lat: 34.139548,
 		lng: -118.412841,
+		category: 'entertainment',
 		index: 4
 	},
 	{
 		title: 'SC Tattoo and Body Piercing',
 		lat: 34.140534,
 		lng: -118.371331,
+		category: 'shop',
 		index: 5
 	},
 	{
 		title: 'Cactus Taqueria',
 		lat: 34.150541,
 		lng: -118.379208,
+		category: 'restaurant',
 		index: 6
 	}
 ];
 
-/* Helper array to store markers objects
- * to be used combined with the index
- */
-var markerArray = [];
-/* Google Maps API callback
- */
-function initMap() {
-	/* Defines default center of map
-	 * center is NOT a marker
-	 */
-	var mapCenter = {lat: 34.150332, lng: -118.387729};
-	var map = new google.maps.Map(document.getElementById('map'), {
-		zoom: 14,
-		center: mapCenter
-	});
-	/* Declares helper variables
-	 */
-	var myLatLng;
-	var marker;
-	var loc;
-	var locationsQnt = initialLocations.length;
-	var infowindow = null;
-	/* Blank pre-setup for the infowindow
-	 */
-	infowindow = new google.maps.InfoWindow({
+var GoogleMap = function() {
+	this.map = {};
+	this.mapMarkers = [];
+	this.initMap();
+	this.infowindow = new google.maps.InfoWindow({
 		content: ''
 	});
-	/* Gets objects from initialLocations array and 
-	 *  uses its data to create markers
-	 */
-	for (var i = 0; i < locationsQnt; i++){
-		/* Gets values from the JSON data
-		 * and store 'em on vars
-		 */
-		loc = initialLocations[i];
-		myLatLng = {lat: loc.lat, lng: loc.lng}
-		/* Creates a marker each iteration
-		 * containing the data from initialLocations
-		 */
-		marker = new google.maps.Marker({
-			position: myLatLng,
-			map: map,
-			title: loc.title
-		});
-		/* Creates a listener to each marker
-		 * to be opened its infowindow on click event
-		 */
-		marker.addListener('click', function() {
-			infowindow.setContent(this.title);
-			infowindow.open(map, this);
-		});
-		/* Add marker to markerArray helper
-		 */
-		markerArray.push(marker);
+};
+
+GoogleMap.prototype.initMap = function() {
+	var mapCenter = { lat: 34.150332, lng: -118.387729 };
+	this.map = new google.maps.Map(document.getElementById('map'), {
+		zoom: 14,
+		center: mapCenter
+	});	
+};
+
+GoogleMap.prototype.addMarker = function(locationObj) {	
+	var self = this;
+	var coords = { lat: locationObj.lat, lng: locationObj.lng }
+	
+	var marker = new google.maps.Marker({
+		position: coords,
+		map: this.map,
+		title: locationObj.title
+	});
+	
+	marker.addListener('click', function() {
+		self.infowindow.setContent(locationObj.title);
+		self.infowindow.open(this.map, this);
+	});
+				
+	this.mapMarkers.push(marker);
+};
+
+GoogleMap.prototype.setAllMap = function(map) {
+	for (var i = 0; i < this.mapMarkers.length; i++) {
+		this.mapMarkers[i].setMap(map);
+	}
+};
+
+GoogleMap.prototype.clearMarkers = function() {
+	this.setAllMap(null);
+};
+
+GoogleMap.prototype.showMarkers = function() {
+	this.setAllMap(this.map);
+};
+
+GoogleMap.prototype.deleteMarkers = function() {
+	this.clearMarkers();
+	this.mapMarkers = [];
+};
+
+GoogleMap.prototype.populateMarkers = function() {
+	for(var i=0; i<initialLocations.length; i++){
+		this.addMarker(initialLocations[i]);
 	}
 }
 
-/* Sets up data model for locations
- */
+var gmap = new GoogleMap;
+gmap.populateMarkers();
+
 var Location = function(data) {
 	this.title = ko.observable(data.title);
-	this.lat = ko.observable(data.lat);
-	this.lng = ko.observable(data.lng);
+	this.category = ko.observable(data.category);
 	this.index = ko.observable(data.index);
 }
 
-/* Sets up viewModel
- */
 var ViewModel = function() {
 	var self = this;
-	/* Creates an empty observable array
-	 */
+
 	this.locationList = ko.observableArray([]);
-	/* Populates the empty observable array with Location objects
-	 */
-	initialLocations.forEach(function(locationItem) {
-		self.locationList.push( new Location(locationItem) );
+
+	initialLocations.forEach(function(locationObj) {
+		self.locationList.push( new Location(locationObj) );
 	});
-	/* Declares a variable (no parameter needed)
- 	 */
+
 	this.currentLocation = ko.observable();
-	/* Called when some location on the view list is clicked
-	 * triggers a click event on the clickedLocation marker
-	 */
+
 	this.openInfo = function(clickedLocation) {
-		google.maps.event.trigger(markerArray[clickedLocation.index()], 'click');
+		google.maps.event.trigger(gmap.mapMarkers[clickedLocation.index()], 'click');
+	};
+
+	this.filterByClass = function(clickedCategory) {
+
 	};
 }
-/* Links view associations with ViewModel
- */
-ko.applyBindings( new ViewModel() );
 
+ko.applyBindings( new ViewModel() );
