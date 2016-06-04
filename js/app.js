@@ -92,7 +92,7 @@ GoogleMap.prototype.addMarker = function(locationObj, index) {
  * mapMarkers array data
  */
 GoogleMap.prototype.setAllMap = function(map) {
-	for (var i = 0; i < this.mapMarkers.length; i++) {
+	for (var i in this.mapMarkers) {
 		this.mapMarkers[i].setMap(map);
 	}
 };
@@ -119,12 +119,11 @@ GoogleMap.prototype.populateMarkers = function(category) {
 	/* Empty previous markers data before filtering
 	 */
 	this.deleteMarkers();
-	var initialLocationsQnt = initialLocations.length;
 	/* Loop thru the initialLocations array adding all
 	 * the elements to the marker array in case of category being "all"
 	 */
 	if (category === "all") {
-		for (var i = 0; i < initialLocationsQnt; i++) {
+		for (var i in initialLocations) {
 			this.addMarker(initialLocations[i], i);
 		}
 	}
@@ -135,14 +134,14 @@ GoogleMap.prototype.populateMarkers = function(category) {
 	 */
 	else {
 		var positionOnArray = 0;
-		for (var i = 0; i < initialLocationsQnt; i++) {
+		for (var i in initialLocations) {
 			if (initialLocations[i].category === category) {
 				this.addMarker(initialLocations[i], positionOnArray);
 				positionOnArray++;
 			}
 		}
 	}
-}
+};
 /* Creates an instance of GoogleMap
  */
 var map = new GoogleMap;
@@ -152,7 +151,7 @@ var Location = function(data) {
 	this.title = ko.observable(data.title);
 	this.category = ko.observable(data.category);
 	this.index = ko.observable(data.index);
-}
+};
 
 var ViewModel = function() {
 	var self = this;
@@ -182,11 +181,28 @@ var ViewModel = function() {
 		});
 	};
 
-	this.searchStr = ko.observable("");
-	this.filterBySearch = function() {
-		
+	this.query = ko.observable('');
+
+	this.liveSearch = function(value) {
+		self.locationList.removeAll();
+
+		if (value == '') {
+			for (var locationItem in initialLocations) {
+				self.locationList.push(initialLocations[locationItem]);
+			}	
+			return;
+		}
+
+		for (var locationItem in initialLocations) {
+			if (initialLocations[locationItem].title.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
+				self.locationList.push(initialLocations[locationItem]);
+			}
+		}	
 	};
-}
+};
+
 /* Links view associations with ViewModel
  */
-ko.applyBindings( new ViewModel() );
+var viewModel = new ViewModel();
+viewModel.query.subscribe(viewModel.liveSearch);
+ko.applyBindings( viewModel );

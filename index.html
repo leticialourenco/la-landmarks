@@ -38,9 +38,9 @@
 					
 					<!-- Search box -->
 					<div class="input-group">
-				     	<input type="text" data-bind="textInput: searchStr" class="form-control" placeholder="Search...">
+				     	<input type="text" data-bind="value: query, valueUpdate: 'keyup'" class="form-control" placeholder="Search...">
 				    	<span class="input-group-btn">
-				        	<button data-bind="click: filterBySearch" class="btn btn-default" type="button">Filter</button>
+				        	<button class="btn btn-default" type="button">Filter</button>
 				      	</span>
 				    </div>
 
