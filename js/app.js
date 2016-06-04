@@ -112,20 +112,25 @@ GoogleMap.prototype.deleteMarkers = function() {
 	this.clearMarkers();
 	this.mapMarkers.splice(0, this.mapMarkers.length);
 };
+/* Loop thru the initialLocations array adding all
+ * the elements to the markers array
+ */
+GoogleMap.prototype.loadMarkers = function() {
+	for (var i in initialLocations) {
+		this.addMarker(initialLocations[i], i);
+	}
+};
 /* Add markers to the mapMarkers array by filtering 'em
  * by category provided as parameter
  */
-GoogleMap.prototype.populateMarkers = function(category) {
+GoogleMap.prototype.populateMarkersByCategory = function(category) {
 	/* Empty previous markers data before filtering
 	 */
 	this.deleteMarkers();
-	/* Loop thru the initialLocations array adding all
-	 * the elements to the marker array in case of category being "all"
+	/* Load markers in case of category being All
 	 */
 	if (category === "all") {
-		for (var i in initialLocations) {
-			this.addMarker(initialLocations[i], i);
-		}
+		this.loadMarkers();
 	}
 	/* Loop thru the initialLocations array, add elements with 
 	 * similar category to the marker array, followed by a number 
@@ -142,9 +147,35 @@ GoogleMap.prototype.populateMarkers = function(category) {
 		}
 	}
 };
+
+GoogleMap.prototype.populateMarkersBySearch = function(searchQuery) {
+	/* Empty previous markers data before filtering
+	 */
+	this.deleteMarkers();
+	/* Load markers in case of empty search query
+	 */
+	if (searchQuery === '') {
+		this.loadMarkers();
+	}
+	/* Loop thru the initialLocations array, add elements with 
+	 * similar category to the marker array, followed by a number 
+	 * (its position on the array) to facilitate the infoWindows
+	 * to be opened also by clicking on the sidebar list elements
+	 */
+	else {
+		var positionOnArray = 0;
+		for (var i in initialLocations) {
+			if (initialLocations[i].title.toLowerCase().indexOf(searchQuery.toLowerCase()) >= 0) {
+				this.addMarker(initialLocations[i], positionOnArray);
+				positionOnArray++;
+			}
+		}	
+	}
+};
 /* Creates an instance of GoogleMap
  */
 var map = new GoogleMap;
+
 /* Sets up data model for locations
  */
 var Location = function(data) {
@@ -161,43 +192,37 @@ var ViewModel = function() {
 	this.openInfo = function(clickedLocation) {
 		google.maps.event.trigger(map.mapMarkers[clickedLocation.index()], 'click');
 	};
-
-	this.locationList = ko.observableArray([]);
-	this.filterByClass = function(clickedCategory) {
-		/* Calls populateMarkers function on google maps object
-		 * to create and render new set of filtered markers
-		 */
-		map.populateMarkers(clickedCategory);
-		/* Empty the locationList array before repopulating
-		 * with filtered data => manages the sidebar list
-		 */
-		self.locationList.removeAll();
-		/* Repopulates the sidebar list with data stored
-		 * on google maps mapMarkers array (already filtered)
-		 * eliminating the need of filtering again for the list
-		 */
-		map.mapMarkers.forEach(function(locationItem) {
-			self.locationList.push( new Location(locationItem) );
+	/* Repopulates the sidebar list with data stored
+	 * on google maps mapMarkers array (already filtered)
+	 * eliminating the need of filtering again for the list
+	 */
+	this.pushMarkersIntoList = function() {
+		map.mapMarkers.forEach(function(locationObj) {
+			self.locationList.push( new Location(locationObj) );
 		});
+	};
+	
+	this.locationList = ko.observableArray([]);
+	/* Sends the name of the category collected thru binding
+	 * to populateMarkersByCategory on the Google Maps object.
+	 * Clean sidebar list and repopulate it with current markers
+	 */
+	this.filterByCategory = function(clickedCategory) {
+		map.populateMarkersByCategory(clickedCategory);
+		self.locationList.removeAll();
+		self.pushMarkersIntoList();
+
 	};
 
 	this.query = ko.observable('');
-
-	this.liveSearch = function(value) {
+	/* Sends the search query collected thru observable var
+	 * to populateMarkers on the Google Maps object.
+	 * Clean sidebar list and repopulate it with current markers
+	 */
+	this.liveSearch = function(searchQuery) {
+		map.populateMarkersBySearch(searchQuery);
 		self.locationList.removeAll();
-
-		if (value == '') {
-			for (var locationItem in initialLocations) {
-				self.locationList.push(initialLocations[locationItem]);
-			}	
-			return;
-		}
-
-		for (var locationItem in initialLocations) {
-			if (initialLocations[locationItem].title.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
-				self.locationList.push(initialLocations[locationItem]);
-			}
-		}	
+		self.pushMarkersIntoList();	
 	};
 };
 
