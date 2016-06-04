@@ -164,7 +164,6 @@ var ViewModel = function() {
 	};
 
 	this.locationList = ko.observableArray([]);
-	
 	this.filterByClass = function(clickedCategory) {
 		/* Calls populateMarkers function on google maps object
 		 * to create and render new set of filtered markers
@@ -183,6 +182,10 @@ var ViewModel = function() {
 		});
 	};
 
+	this.searchStr = ko.observable("");
+	this.filterBySearch = function() {
+		
+	};
 }
 /* Links view associations with ViewModel
  */

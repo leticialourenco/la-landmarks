@@ -14,7 +14,8 @@
 			<div class="row">
 				<div class="col-xs-3 sidebar">
 					<h3>Studio City<br>Highlights</h3>
-					
+
+					<!-- Category filter list -->
 					<div class="dropdown">
 					  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
 					    Filter by Category
@@ -30,6 +31,20 @@
 					  </ul>
 					</div>
 
+					<!-- Fields separator -->
+					<div class="separator">
+						<em>- - - - - <span>or</span> - - - - -</em>
+					</div>
+					
+					<!-- Search box -->
+					<div class="input-group">
+				     	<input type="text" data-bind="textInput: searchStr" class="form-control" placeholder="Search...">
+				    	<span class="input-group-btn">
+				        	<button data-bind="click: filterBySearch" class="btn btn-default" type="button">Filter</button>
+				      	</span>
+				    </div>
+
+				    <!-- Location list -->
 					<ul data-bind="foreach: locationList" class="sidebar-list">
 						<li><a data-bind="text: title, click: $parent.openInfo"></a></li>
 					</ul>

@@ -31,7 +31,8 @@ h3 {
 }
 
 .dropdown-toggle,
-.dropdown-menu {
+.dropdown-menu,
+.input-group {
 	width: 80%;
 	margin-left: 10%;
 	border-radius: 3px;
@@ -49,6 +50,41 @@ h3 {
 
 .dropdown-menu a {
 	padding: 10px 20px!important;
+}
+
+.btn {
+	padding: 8px 12px;
+}
+
+.separator {
+	color: #aaa;
+	text-align: center;
+	padding: 10px 0;
+}
+
+.separator span {
+	padding: 0 10px;
+	letter-spacing: 1px;
+	font-size: 15px;
+}
+
+.input-group input,
+.input-group button {
+	border-radius: 3px;
+	border: none;
+	text-transform: uppercase;
+	font-size: 12px;
+	letter-spacing: 1px;
+}
+
+.input-group input:focus {
+	box-shadow: 0 0 0;
+}
+
+.input-group span,
+.input-group button {
+	background: #eee;
+	border-radius: 0 3px 3px 0;
 }
 
 .sidebar-list {
