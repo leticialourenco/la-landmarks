@@ -50,13 +50,15 @@ var initialLocations = [
 function first(obj) {
     for (var a in obj) return a;
 }
-
-/*
+/* Manages the window where the wikipedia 
+ * content is displayed
  */
 function displayWikipediaBox() {
 	$('#wikipediaBox').show();
 }
-
+function closeWikipediaBox() {
+	$('#wikipediaBox').hide();
+}
 /* Load wikipedia data of a location and 
  * display it on the view
  */
@@ -77,7 +79,8 @@ function loadWikipediaData(locationObj) {
 	/* Handles error for the ajax request
 	 */
 	var wikiRequestTimeout = setTimeout(function(){
-        $('#wikipediaContent').text('Failes to get Wikipedia resources');
+		$('#wikipediaContent').text('');
+        $('#wikipediaContent').append('<p class="error">Failes to get Wikipedia resources</p>');
     }, 3000);
 
 	$.ajax({
@@ -91,9 +94,9 @@ function loadWikipediaData(locationObj) {
             var pageObj = response.query.pages[pageId];
             var url = pageObj.fullurl;    
             var imgSrc = pageObj.thumbnail.original;
-            var wikipediaHTMLInfo = '<p><img class="thumb" src="' + imgSrc + '"><br>' +
-    							 	'<a href="' + url + '" target="_blank">' + 
-    							  	' Read More</a></p>';
+            var wikipediaHTMLInfo = '<img class="thumbnail" src="' + imgSrc + '">' +
+    							 	'<a href="' + url + '" target="_blank" class="btn btn-primary btn-box">' + 
+    							  	' Read Article</a>';
     		$('#wikipediaContent').append(wikipediaHTMLInfo);            
             clearTimeout(wikiRequestTimeout);
        }
@@ -136,7 +139,7 @@ GoogleMap.prototype.addMarker = function(locationObj, index) {
 	 * getting its content from the object provided
 	 */
 	marker.addListener('click', function() {
-		self.infowindow.setContent(locationObj.title);
+		self.infowindow.setContent('<span class="markerTitle">' + locationObj.title + '</span>');
 		self.infowindow.open(this.map, this);
 	});
 	/* Add newly created Marker instance to mapMarkers array
@@ -269,7 +272,7 @@ var ViewModel = function() {
 		map.populateMarkersByCategory(clickedCategory);
 		self.locationList.removeAll();
 		self.pushMarkersIntoList();
-
+		closeWikipediaBox();
 	};
 
 	this.query = ko.observable('');
@@ -280,7 +283,8 @@ var ViewModel = function() {
 	this.liveSearch = function(searchQuery) {
 		map.populateMarkersBySearch(searchQuery);
 		self.locationList.removeAll();
-		self.pushMarkersIntoList();	
+		self.pushMarkersIntoList();
+		closeWikipediaBox();
 	};
 };
 
