@@ -3,7 +3,6 @@
 body, html{
 	height: 100%;
 	font-family: 'Lato', sans-serif;
-	overflow: hidden;
 }
 
 h3 {
@@ -16,9 +15,13 @@ h3 {
 	text-align: center;
 }
 
+#main {
+	padding: 0;
+}
+
 #map {
 	position: relative;
-	padding-bottom: 75%; /* 4:3 ratio */
+	padding-bottom: 100%; /* 4:3 ratio */
 	height: 0;
 	overflow: hidden;
 }  
@@ -77,7 +80,10 @@ h3 {
 	letter-spacing: 1px;
 }
 
-.input-group input:focus {
+.input-group input:active,
+.input-group input:focus,
+.input-group button:active,
+.input-group button:focus {
 	box-shadow: 0 0 0;
 }
 
@@ -117,4 +123,19 @@ h3 {
 .sidebar-list li:active a,
 .sidebar-list .active a {
 	color: #fff;
+}
+
+#wikipediaBox {
+	height: 300px;
+	width: 300px;
+	float: right;
+	background: #fff;
+	padding: 15px 30px 30px;
+	position: absolute;
+	z-index: 9999;
+	text-align: center;
+}
+
+.thumb {
+	height: 150px;
 }

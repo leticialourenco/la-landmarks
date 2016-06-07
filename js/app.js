@@ -2,13 +2,13 @@
 
 var initialLocations = [
 	{
-		title: 'Capella Salon',
+		title: 'Grand Canyon',
 		lat: 34.144981,
 		lng: -118.414361,
 		category: 'shop'
 	},
 	{
-		title: 'Lemonade Studio City',
+		title: 'New York City',
 		lat: 34.143106,
 		lng: -118.403175,
 		category: 'restaurant'
@@ -20,30 +20,85 @@ var initialLocations = [
 		category: 'entertainment'
 	},
 	{
-		title: 'Crossfit Studio City',
+		title: 'Yellowstone National Park',
 		lat: 34.141580,
 		lng: -118.387551,
 		category: 'gym'
 	},
 	{
-		title: 'Harvard-WestLake Film Festival',
+		title: 'Hollywood',
 		lat: 34.139548,
 		lng: -118.412841,
 		category: 'entertainment'
 	},
 	{
-		title: 'SC Tattoo and Body Piercing',
+		title: 'Hollywood Walk of Fame',
 		lat: 34.140534,
 		lng: -118.371331,
 		category: 'shop'
 	},
 	{
-		title: 'Cactus Taqueria',
+		title: 'Pakjsjhdfris',
 		lat: 34.150541,
 		lng: -118.379208,
 		category: 'restaurant'
 	}
 ];
+
+/* Returns the first element within one object
+ */
+function first(obj) {
+    for (var a in obj) return a;
+}
+
+/*
+ */
+function displayWikipediaBox() {
+	$('#wikipediaBox').show();
+}
+
+/* Load wikipedia data of a location and 
+ * display it on the view
+ */
+function loadWikipediaData(locationObj) {  
+	/*
+	 */
+	displayWikipediaBox();
+	/* Clear element of previous information
+	 * and append a header containint locationObj title
+	 */
+	$('#wikipediaContent').text('');
+	$('#wikipediaContent').append('<span>' + locationObj.title + '</span>');  	
+	/*
+	 */	
+	var locationQuery = locationObj.title.split(' ').join('+'); 
+	var wikiUrl = 'https://en.wikipedia.org/w/api.php?action=query&format=json&prop=info%7Cpageimages&list=&iwurl=1&titles=' + 
+	locationQuery + '&inprop=url&piprop=original';
+	/* Handles error for the ajax request
+	 */
+	var wikiRequestTimeout = setTimeout(function(){
+        $('#wikipediaContent').text('Failes to get Wikipedia resources');
+    }, 3000);
+
+	$.ajax({
+       url: wikiUrl,
+       dataType: "jsonp",
+       success: function(response) {
+       		/* Gets data from the response JSON and
+       		 * assembles the HTML to be rendered
+       		 */
+       	    var pageId = first(response.query.pages);
+            var pageObj = response.query.pages[pageId];
+            var url = pageObj.fullurl;    
+            var imgSrc = pageObj.thumbnail.original;
+            var wikipediaHTMLInfo = '<p><img class="thumb" src="' + imgSrc + '"><br>' +
+    							 	'<a href="' + url + '" target="_blank">' + 
+    							  	' Read More</a></p>';
+    		$('#wikipediaContent').append(wikipediaHTMLInfo);            
+            clearTimeout(wikiRequestTimeout);
+       }
+    });
+}
 
 /* Set up map model
  */
@@ -188,9 +243,12 @@ var ViewModel = function() {
 	var self = this;
 	/* Called when some location on the view list is clicked
 	 * triggers a click event on the clickedLocation marker
+	 * Call the loadWikipediaData to get wikipedia content
+	 * referent to the clicked location
 	 */
 	this.openInfo = function(clickedLocation) {
 		google.maps.event.trigger(map.mapMarkers[clickedLocation.index()], 'click');
+		loadWikipediaData(initialLocations[clickedLocation.index()]);
 	};
 	/* Repopulates the sidebar list with data stored
 	 * on google maps mapMarkers array (already filtered)
