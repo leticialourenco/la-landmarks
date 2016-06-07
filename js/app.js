@@ -206,7 +206,7 @@ var ViewModel = function() {
 	 */
 	this.openInfo = function(clickedLocation) {
 		google.maps.event.trigger(map.mapMarkers[clickedLocation.index()], 'click');
-		loadWikipediaData(initialLocations[clickedLocation.index()]);
+		self.loadWikipediaData(initialLocations[clickedLocation.index()]);
 	};
 	/* Repopulates the sidebar list with data stored
 	 * on google maps mapMarkers array (already filtered)
@@ -227,7 +227,7 @@ var ViewModel = function() {
 		map.populateMarkersByCategory(clickedCategory);
 		self.locationList.removeAll();
 		self.pushMarkersIntoList();
-		closeWikipediaBox();
+		self.hideWikipediaBox();
 	};
 
 	this.query = ko.observable('');
@@ -239,65 +239,61 @@ var ViewModel = function() {
 		map.populateMarkersBySearch(searchQuery);
 		self.locationList.removeAll();
 		self.pushMarkersIntoList();
-		closeWikipediaBox();
+		self.hideWikipediaBox();
 	};
+
+	this.first = function(obj) {
+		for(var i in obj) return i;
+	};
+
+	this.showWikipediaBox = function () {
+		$('#wikipediaBox').show();
+	};
+
+	this.hideWikipediaBox = function () {
+		$('#wikipediaBox').hide();
+	};
+
+	this.loadWikipediaData = function (locationObj) {
+		self.showWikipediaBox();
+		/* Clear element of previous information
+		 * and append a header containint locationObj title
+		 */
+		$('#wikipediaContent').text('');
+		$('#wikipediaContent').append('<span>' + locationObj.title + '</span>');  	
+		/* Prepares the wikipedias' URl for the AJAX request
+		 */	
+		var locationQuery = locationObj.title.split(' ').join('+'); 
+		var wikiUrl = 'https://en.wikipedia.org/w/api.php?action=query&format=json&prop=info%7Cpageimages&titles='
+		+ locationQuery + '&inprop=url&piprop=thumbnail&pithumbsize=300';
+		/* Handles error for the ajax request
+		 */
+		var wikiRequestTimeout = setTimeout(function(){
+			$('#wikipediaContent').text('');
+	        $('#wikipediaContent').append('<p class="error">Failes to get Wikipedia resources</p>');
+	    }, 3000);
+
+		$.ajax({
+	       url: wikiUrl,
+	       dataType: "jsonp",
+	       success: function(response) {
+	       		/* Gets data from the response JSON and
+	       		 * assembles the HTML to be rendered
+	       		 */
+	       	    var pageId = self.first(response.query.pages);
+	            var pageObj = response.query.pages[pageId];
+	            var url = pageObj.fullurl;    
+	            var imgSrc = pageObj.thumbnail.source;
+	            var wikipediaHTMLInfo = '<img class="thumbnail" src="' + imgSrc + '">' +
+	    							 	'<a href="' + url + '" target="_blank" class="btn btn-primary btn-box">' + 
+	    							  	' Read Article</a>';
+	    		$('#wikipediaContent').append(wikipediaHTMLInfo);            
+	            clearTimeout(wikiRequestTimeout);
+	       }
+	    });
+	}
 };
 
-/* Returns the first element within one object
- */
-function first(obj) {
-    for (var a in obj) return a;
-}
-/* Manages the window where the wikipedia 
- * content is displayed
- */
-function displayWikipediaBox() {
-	$('#wikipediaBox').show();
-}
-function closeWikipediaBox() {
-	$('#wikipediaBox').hide();
-}
-/* Load wikipedia data of a location and 
- * display it on the view
- */
-function loadWikipediaData(locationObj) {  
-	displayWikipediaBox();
-	/* Clear element of previous information
-	 * and append a header containint locationObj title
-	 */
-	$('#wikipediaContent').text('');
-	$('#wikipediaContent').append('<span>' + locationObj.title + '</span>');  	
-	/* Prepares the wikipedias' URl for the AJAX request
-	 */	
-	var locationQuery = locationObj.title.split(' ').join('+'); 
-	var wikiUrl = 'https://en.wikipedia.org/w/api.php?action=query&format=json&prop=info%7Cpageimages&list=&iwurl=1&titles=' + 
-	locationQuery + '&inprop=url&piprop=original';
-	/* Handles error for the ajax request
-	 */
-	var wikiRequestTimeout = setTimeout(function(){
-		$('#wikipediaContent').text('');
-        $('#wikipediaContent').append('<p class="error">Failes to get Wikipedia resources</p>');
-    }, 3000);
-
-	$.ajax({
-       url: wikiUrl,
-       dataType: "jsonp",
-       success: function(response) {
-       		/* Gets data from the response JSON and
-       		 * assembles the HTML to be rendered
-       		 */
-       	    var pageId = first(response.query.pages);
-            var pageObj = response.query.pages[pageId];
-            var url = pageObj.fullurl;    
-            var imgSrc = pageObj.thumbnail.original;
-            var wikipediaHTMLInfo = '<img class="thumbnail" src="' + imgSrc + '">' +
-    							 	'<a href="' + url + '" target="_blank" class="btn btn-primary btn-box">' + 
-    							  	' Read Article</a>';
-    		$('#wikipediaContent').append(wikipediaHTMLInfo);            
-            clearTimeout(wikiRequestTimeout);
-       }
-    });
-}
 /* Links view associations with ViewModel
  */
 var viewModel = new ViewModel();
