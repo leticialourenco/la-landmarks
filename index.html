@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<title>Studio City Highlights</title>  
+	<title>Los Angeles Landmarks</title>  
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 	<link rel="stylesheet" href="css/styles.css">
 </head>
@@ -12,51 +12,52 @@
 	<div class="wrapper">
 		<div class="container-fluid">
 			<div class="row">
+				<!-- START SIDEBAR -->
 				<div class="col-xs-3 sidebar">
-					<h3>Los Angeles<br>Historical<br>Landmarks</h3>
-
-					<!-- Category filter list -->
+					<h3>Los Angeles<br>Landmarks</h3>
+					<!-- category filter list -->
 					<div class="dropdown">
 					  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
 					    Filter by Category
 					    <span class="caret"></span>
 					  </button>
-					  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+					  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">					    
+					  	<li><a href="#" data-bind="click: filterByCategory('art')">Art</a></li>
 					    <li><a href="#" data-bind="click: filterByCategory('entertainment')">Entertainment</a></li>
-					    <li><a href="#" data-bind="click: filterByCategory('gym')">Gym</a></li>
-					    <li><a href="#" data-bind="click: filterByCategory('restaurant')">Restaurants</a></li>
-					    <li><a href="#" data-bind="click: filterByCategory('shop')">Shops</a></li>		    
+					    <li><a href="#" data-bind="click: filterByCategory('science')">Science</a></li>		    
+					    <li><a href="#" data-bind="click: filterByCategory('sport')">Sport</a></li>
 					    <li role="separator" class="divider"></li>
 					    <li><a href="#" data-bind="click: filterByCategory('all')">See All</a></li>
 					  </ul>
 					</div>
-
-					<!-- Fields separator -->
+					<!-- fields separator -->
 					<div class="separator">
 						<em>- - - - - <span>or</span> - - - - -</em>
 					</div>
-					
-					<!-- Search box -->
+					<!-- search box -->
 					<div class="input-group">
 				     	<input type="text" data-bind="value: query, valueUpdate: 'keyup'" class="form-control" placeholder="Search...">
 				    	<span class="input-group-btn">
 				        	<button class="btn btn-default" type="button">Filter</button>
 				      	</span>
 				    </div>
-
-				    <!-- Location list -->
+				    <!-- location list -->
 					<ul data-bind="foreach: locationList" class="sidebar-list">
 						<li><a data-bind="text: title, click: $parent.openInfo"></a></li>
 					</ul>
 				</div>
-
+				<!-- END SIDEBAR -->
+				<!-- START MAIN -->
 				<div class="col-xs-9" id="main">
+					<!-- wikipedia information box -->
 					<div class="col-xs-12" id="wikipediaBox">
 						<h4 id="wikipediaBoxHeader">Provided by Wikipedia.org <button data-bind="click: closeWikipediaBox">X</button></h4>
-						<div id="wikipediaContent"> </div>
+						<div id="wikipediaContent"></div>
 					</div>
+					<!-- google maps -->
 					<div class="col-xs-12" id="map"></div>
 				</div>
+				<!-- END MAIN -->
 			</div>
 		</div>
 	</div>

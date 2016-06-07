@@ -189,6 +189,7 @@ h3 {
 
 .thumbnail {
 	height: 150px;
+	max-width: 270px;
 	margin: 15px auto;
 }
 

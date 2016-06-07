@@ -2,106 +2,54 @@
 
 var initialLocations = [
 	{
-		title: 'Grand Canyon',
-		lat: 34.144981,
-		lng: -118.414361,
-		category: 'shop'
-	},
-	{
-		title: 'New York City',
-		lat: 34.143106,
-		lng: -118.403175,
-		category: 'restaurant'
-	},
-	{
-		title: 'Universal CityWalk',
-		lat: 34.136491,
-		lng: -118.353186,
+		title: 'Universal Studios Hollywood',
+		lat: 34.136518,
+		lng: -118.356051,
 		category: 'entertainment'
 	},
 	{
-		title: 'Yellowstone National Park',
-		lat: 34.141580,
-		lng: -118.387551,
-		category: 'gym'
+		title: 'Griffith Observatory',
+		lat: 34.11856,
+		lng: -118.30037,
+		category: 'science'
 	},
 	{
-		title: 'Hollywood',
-		lat: 34.139548,
-		lng: -118.412841,
+		title: 'Hollywood Boulevard',
+		lat: 34.101604,
+		lng: -118.333285,
 		category: 'entertainment'
+	},
+	{
+		title: 'Getty Center',
+		lat: 34.078019,
+		lng: -118.474106,
+		category: 'art'
 	},
 	{
 		title: 'Hollywood Walk of Fame',
-		lat: 34.140534,
-		lng: -118.371331,
-		category: 'shop'
+		lat: 34.101514,
+		lng: -118.326839,
+		category: 'entertainment'
 	},
 	{
-		title: 'Pakjsjhdfris',
-		lat: 34.150541,
-		lng: -118.379208,
-		category: 'restaurant'
+		title: 'Walt Disney Concert Hall',
+		lat: 34.055341,
+		lng: -118.249847,
+		category: 'entertainment'
+	},
+	{
+		title: 'Dodger Stadium',
+		lat: 34.073839,
+		lng: -118.239953,
+		category: 'sport'
+	},
+	{
+		title: 'Los Angeles County Museum of Art',
+		lat: 34.063932,
+		lng: -118.359240,
+		category: 'art'
 	}
 ];
-
-/* Returns the first element within one object
- */
-function first(obj) {
-    for (var a in obj) return a;
-}
-/* Manages the window where the wikipedia 
- * content is displayed
- */
-function displayWikipediaBox() {
-	$('#wikipediaBox').show();
-}
-function closeWikipediaBox() {
-	$('#wikipediaBox').hide();
-}
-/* Load wikipedia data of a location and 
- * display it on the view
- */
-function loadWikipediaData(locationObj) {  
-	/*
-	 */
-	displayWikipediaBox();
-	/* Clear element of previous information
-	 * and append a header containint locationObj title
-	 */
-	$('#wikipediaContent').text('');
-	$('#wikipediaContent').append('<span>' + locationObj.title + '</span>');  	
-	/*
-	 */	
-	var locationQuery = locationObj.title.split(' ').join('+'); 
-	var wikiUrl = 'https://en.wikipedia.org/w/api.php?action=query&format=json&prop=info%7Cpageimages&list=&iwurl=1&titles=' + 
-	locationQuery + '&inprop=url&piprop=original';
-	/* Handles error for the ajax request
-	 */
-	var wikiRequestTimeout = setTimeout(function(){
-		$('#wikipediaContent').text('');
-        $('#wikipediaContent').append('<p class="error">Failes to get Wikipedia resources</p>');
-    }, 3000);
-
-	$.ajax({
-       url: wikiUrl,
-       dataType: "jsonp",
-       success: function(response) {
-       		/* Gets data from the response JSON and
-       		 * assembles the HTML to be rendered
-       		 */
-       	    var pageId = first(response.query.pages);
-            var pageObj = response.query.pages[pageId];
-            var url = pageObj.fullurl;    
-            var imgSrc = pageObj.thumbnail.original;
-            var wikipediaHTMLInfo = '<img class="thumbnail" src="' + imgSrc + '">' +
-    							 	'<a href="' + url + '" target="_blank" class="btn btn-primary btn-box">' + 
-    							  	' Read Article</a>';
-    		$('#wikipediaContent').append(wikipediaHTMLInfo);            
-            clearTimeout(wikiRequestTimeout);
-       }
-    });
-}
 
 /* Set up map model
  */
@@ -115,12 +63,13 @@ var GoogleMap = function() {
 };
 
 GoogleMap.prototype.initMap = function() {
-	var mapCenter = { lat: 34.150332, lng: -118.387729 };
-	/* Create map object
+	var mapCenter = { lat: 34.076139, lng: -118.330000 };
+	/* Create a map object
 	 */
 	this.map = new google.maps.Map(document.getElementById('map'), {
-		zoom: 14,
-		center: mapCenter
+		zoom: 12,
+		center: mapCenter,
+		draggable: true
 	});	
 };
 
@@ -141,6 +90,12 @@ GoogleMap.prototype.addMarker = function(locationObj, index) {
 	marker.addListener('click', function() {
 		self.infowindow.setContent('<span class="markerTitle">' + locationObj.title + '</span>');
 		self.infowindow.open(this.map, this);
+		this.setAnimation(google.maps.Animation.BOUNCE);
+		/* Cuts the animation time
+		 */ 
+		setTimeout(function () {
+		    marker.setAnimation(null);
+		}, 700);
 	});
 	/* Add newly created Marker instance to mapMarkers array
 	 */			
@@ -288,6 +243,61 @@ var ViewModel = function() {
 	};
 };
 
+/* Returns the first element within one object
+ */
+function first(obj) {
+    for (var a in obj) return a;
+}
+/* Manages the window where the wikipedia 
+ * content is displayed
+ */
+function displayWikipediaBox() {
+	$('#wikipediaBox').show();
+}
+function closeWikipediaBox() {
+	$('#wikipediaBox').hide();
+}
+/* Load wikipedia data of a location and 
+ * display it on the view
+ */
+function loadWikipediaData(locationObj) {  
+	displayWikipediaBox();
+	/* Clear element of previous information
+	 * and append a header containint locationObj title
+	 */
+	$('#wikipediaContent').text('');
+	$('#wikipediaContent').append('<span>' + locationObj.title + '</span>');  	
+	/* Prepares the wikipedias' URl for the AJAX request
+	 */	
+	var locationQuery = locationObj.title.split(' ').join('+'); 
+	var wikiUrl = 'https://en.wikipedia.org/w/api.php?action=query&format=json&prop=info%7Cpageimages&list=&iwurl=1&titles=' + 
+	locationQuery + '&inprop=url&piprop=original';
+	/* Handles error for the ajax request
+	 */
+	var wikiRequestTimeout = setTimeout(function(){
+		$('#wikipediaContent').text('');
+        $('#wikipediaContent').append('<p class="error">Failes to get Wikipedia resources</p>');
+    }, 3000);
+
+	$.ajax({
+       url: wikiUrl,
+       dataType: "jsonp",
+       success: function(response) {
+       		/* Gets data from the response JSON and
+       		 * assembles the HTML to be rendered
+       		 */
+       	    var pageId = first(response.query.pages);
+            var pageObj = response.query.pages[pageId];
+            var url = pageObj.fullurl;    
+            var imgSrc = pageObj.thumbnail.original;
+            var wikipediaHTMLInfo = '<img class="thumbnail" src="' + imgSrc + '">' +
+    							 	'<a href="' + url + '" target="_blank" class="btn btn-primary btn-box">' + 
+    							  	' Read Article</a>';
+    		$('#wikipediaContent').append(wikipediaHTMLInfo);            
+            clearTimeout(wikiRequestTimeout);
+       }
+    });
+}
 /* Links view associations with ViewModel
  */
 var viewModel = new ViewModel();
