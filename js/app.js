@@ -100,7 +100,7 @@ GoogleMap.prototype.addMarker = function(locationObj, index) {
 		this.setAnimation(google.maps.Animation.BOUNCE);
 		/* Cuts the animation time
 		 */ 
-		setTimeout(function () {
+		setTimeout(function() {
 		    marker.setAnimation(null);
 		}, 700);
 	});
@@ -206,6 +206,30 @@ var Location = function(data) {
 
 var ViewModel = function() {
 	var self = this;
+	/* Helper variables interacting with the DOM by jQuery
+	 */
+	this.wikipediaBox = $('#wikipedia-box');
+	this.sidebar = $('#sidebar');
+	this.mobileHeader = $('#mobile-header');
+	this.wikipediaContent = $('#wikipedia-content');
+	
+	this.showElement = function(element) { element.show(); };
+	this.hideElement = function(element) { element.hide(); };
+
+	this.showSidebar = function() {
+		self.showElement(self.sidebar);
+		self.hideElement(self.mobileHeader);
+		self.hideElement(self.wikipediaBox);
+	};
+
+	this.hideSidebar = function() {
+		self.hideElement(self.sidebar);
+		self.showElement(self.mobileHeader);
+	};
+
+	this.first = function(obj) { for(var i in obj) return i; };
+	this.refreshPage = function() { location.reload(); };
+
 	/* Called when some location on the view list is clicked
 	 * triggers a click event on the clickedLocation marker
 	 * Call the loadWikipediaData to get wikipedia content
@@ -213,7 +237,7 @@ var ViewModel = function() {
 	 */
 	this.openInfo = function(clickedLocation) {
 		google.maps.event.trigger(map.mapMarkers[clickedLocation.index()], 'click');
-		self.loadWikipediaData(initialLocations[clickedLocation.index()]);
+		self.loadWikipediaData(map.mapMarkers[clickedLocation.index()]);
 		/* Hide the sidebar on mobiles to give room for the info
 		 */
 		if ($(window).width() < 992) {
@@ -239,7 +263,8 @@ var ViewModel = function() {
 		map.populateMarkersByCategory(clickedCategory);
 		self.locationList.removeAll();
 		self.pushMarkersIntoList();
-		self.hideWikipediaBox();
+		self.hideElement(self.wikipediaBox);
+		self.query('');
 	};
 
 	this.query = ko.observable('');
@@ -251,16 +276,16 @@ var ViewModel = function() {
 		map.populateMarkersBySearch(searchQuery);
 		self.locationList.removeAll();
 		self.pushMarkersIntoList();
-		self.hideWikipediaBox();
+		self.hideElement(self.wikipediaBox);
 	};
 
-	this.loadWikipediaData = function (locationObj) {
-		self.showWikipediaBox();
+	this.loadWikipediaData = function(locationObj) {
+		self.showElement(self.wikipediaBox);
 		/* Clear element of previous information
 		 * and append a header containint locationObj title
 		 */
-		$('#wikipediaContent').text('');
-		$('#wikipediaContent').append('<span>' + locationObj.title + '</span>');  	
+		self.wikipediaContent.text('');
+		self.wikipediaContent.append('<span>' + locationObj.title + '</span>');  	
 		/* Prepares the wikipedias' URl for the AJAX request
 		 */	
 		var locationQuery = locationObj.title.split(' ').join('+'); 
@@ -269,8 +294,8 @@ var ViewModel = function() {
 		/* Handles error for the ajax request
 		 */
 		var wikiRequestTimeout = setTimeout(function(){
-			$('#wikipediaContent').text('');
-	        $('#wikipediaContent').append('<p class="error">Failes to get Wikipedia resources</p>');
+			self.wikipediaContent.text('');
+	        self.wikipediaContent.append('<p class="error">Failes to get Wikipedia resources</p>');
 	    }, 3000);
 
 		$.ajax({
@@ -287,37 +312,11 @@ var ViewModel = function() {
 	            var wikipediaHTMLInfo = '<img class="thumbnail" src="' + imgSrc + '">' +
 	    							 	'<a href="' + url + '" target="_blank" class="btn btn-primary btn-box">' + 
 	    							  	' Read Article</a>';
-	    		$('#wikipediaContent').append(wikipediaHTMLInfo);            
+	    		self.wikipediaContent.append(wikipediaHTMLInfo);            
 	            clearTimeout(wikiRequestTimeout);
 	       }
 	    });
-	}
-
-	this.first = function(obj) {
-		for(var i in obj) return i;
 	};
-
-	this.showWikipediaBox = function () {
-		$('#wikipediaBox').show();
-	};
-
-	this.hideWikipediaBox = function () {
-		$('#wikipediaBox').hide();
-	};
-
-	this.showSidebar = function () {
-		$('.sidebar').show();
-		$('.mobile-header').hide();
-		self.hideWikipediaBox();
-	};
-
-	this.hideSidebar = function () {
-		$('.sidebar').hide();
-		$('.mobile-header').show();
-	};
-	/* Refresh page when window is resized
-	 */
-	$(window).resize(function(){location.reload();});
 };
 
 /* Links view associations with ViewModel

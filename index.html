@@ -13,23 +13,26 @@
 		<div class="container-fluid">
 			<div class="row">
 				<!-- START SIDEBAR -->
-				<div class="col-xs-10 col-sm-5 col-md-4 col-lg-3 sidebar">
-					<button data-bind="click: hideSidebar" class="hidden-md hidden-lg btn-hide">X</button>
-					<h3>Los Angeles<br>Landmarks</h3>
+				<div id="sidebar" class="col-xs-10 col-sm-5 col-md-4 col-lg-3">
+
+					<button data-bind="click: hideSidebar" class="hidden-md hidden-lg btn-hide">
+						<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+					</button>
+
+					<h3><a href="#" data-bind="click: refreshPage" class="logo">Los Angeles<br>Landmarks</a></h3>
 					<!-- category filter list -->
 					<div class="dropdown">
-					  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-					    Filter by Category
-					    <span class="caret"></span>
-					  </button>
-					  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">					    
-					  	<li><a href="#" data-bind="click: filterByCategory('art')">Art</a></li>
-					    <li><a href="#" data-bind="click: filterByCategory('entertainment')">Entertainment</a></li>
-					    <li><a href="#" data-bind="click: filterByCategory('science')">Science</a></li>		    
-					    <li><a href="#" data-bind="click: filterByCategory('sport')">Sport</a></li>
-					    <li role="separator" class="divider"></li>
-					    <li><a href="#" data-bind="click: filterByCategory('all')">See All</a></li>
-					  </ul>
+						<button id="category-filter" class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">Filter by Category <span class="caret"></span>
+					  	</button>
+
+						<ul class="dropdown-menu" aria-labelledby="category-filter">					    
+							<li><a href="#" data-bind="click: filterByCategory('art')">Art</a></li>
+							<li><a href="#" data-bind="click: filterByCategory('entertainment')">Entertainment</a></li>
+							<li><a href="#" data-bind="click: filterByCategory('science')">Science</a></li>		    
+							<li><a href="#" data-bind="click: filterByCategory('sport')">Sport</a></li>
+							<li role="separator" class="divider"></li>
+							<li><a href="#" data-bind="click: filterByCategory('all')">See All</a></li>
+						</ul>
 					</div>
 					<!-- fields separator -->
 					<div class="separator">
@@ -38,30 +41,43 @@
 					<!-- search box -->
 					<div class="input-group">
 				     	<input type="text" data-bind="value: query, valueUpdate: 'keyup'" class="form-control" placeholder="Search...">
+
 				    	<span class="input-group-btn">
-				        	<button class="btn btn-default" type="button">Filter</button>
+				        	<button class="btn btn-default" type="button">
+				        		<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+				        	</button>
 				      	</span>
 				    </div>
 				    <!-- location list -->
 					<ul data-bind="foreach: locationList" class="sidebar-list">
-						<li><a data-bind="text: title, click: $parent.openInfo"></a></li>
+						<li data-bind="click: $parent.openInfo"><a data-bind="text: title"></a></li>
 					</ul>
 				</div>
 				<!-- END SIDEBAR -->
+
 				<!-- START MAIN -->
-				<div class="col-xs-12 col-sm-12 col-md-8 col-lg-9" id="main">
+				<div id="main" class="col-xs-12 col-sm-12 col-md-8 col-lg-9">
 					<!-- mobile site header -->
-					<div class="hidden-md hidden-lg mobile-header">
-						<button data-bind="click: showSidebar" class="btn-toggle">=</button>
+					<div id="mobile-header" class="hidden-md hidden-lg">
+
+						<button data-bind="click: showSidebar" class="btn-toggle">
+							<span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span>
+						</button>
+
 						<p class="toggle-msg">Display options</p>
 					</div>
 					<!-- wikipedia information box -->
-					<div class="col-xs-12" id="wikipediaBox">
-						<h4 id="wikipediaBoxHeader">Provided by Wikipedia.org <button data-bind="click: hideWikipediaBox" class="btn-hide">X</button></h4>
-						<div id="wikipediaContent"></div>
+					<div id="wikipedia-box" class="col-xs-12">
+						<h4 id="wikipedia-box-header">Provided by Wikipedia.org 
+
+						<button data-bind="click: hideElement($('#wikipedia-box'))" class="btn-hide">
+							<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+						</button></h4>
+
+						<div id="wikipedia-content"></div>
 					</div>
 					<!-- google maps -->
-					<div class="col-xs-12" id="map"></div>
+					<div id="map" class="col-xs-12"></div>
 				</div>
 				<!-- END MAIN -->
 			</div>

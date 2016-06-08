@@ -1,5 +1,6 @@
 @import url(https://fonts.googleapis.com/css?family=Oswald:400,300,700|Lato:400,100,300,700,900);
 
+/*	 General   */
 body, html{
 	height: 100%;
 	font-family: 'Lato', sans-serif;
@@ -11,15 +12,28 @@ body {
 }
 
 h3 {
-	color: #fff;
+	text-align: center;
 	padding: 15px 10px 30px;
+}
+
+.logo {
+	color: #fff;
 	text-transform: uppercase;
 	letter-spacing: 2px;
 	font-family: 'Oswald', sans-serif;
 	font-size: 30px;
-	text-align: center;
 }
 
+.logo:hover {
+	text-decoration: none;
+	color: #fff;
+}
+
+.error {
+	color: #F7584C;
+}
+
+/*	Page Structure 	*/
 #main {
 	padding: 0;
 }
@@ -31,13 +45,14 @@ h3 {
 	overflow: hidden;
 }  
 
-.sidebar {
+#sidebar {
 	background:#333;
 	padding: 0 0 50px;
 	height: 100%;
 	overflow: scroll;
 }
 
+/*	Inputs	*/
 .dropdown-toggle,
 .dropdown-menu,
 .input-group {
@@ -58,10 +73,6 @@ h3 {
 
 .dropdown-menu a {
 	padding: 10px 20px!important;
-}
-
-.btn {
-	padding: 8px 12px;
 }
 
 .separator {
@@ -99,6 +110,52 @@ h3 {
 	border-radius: 0 3px 3px 0;
 }
 
+.input-group-btn button {
+	color: #999;
+}
+
+/*   Buttons   */
+.btn {
+	padding: 8px 12px;
+}
+
+.btn-primary {
+	background: #F29A1A;
+	color: #fff;
+	width: 100%;
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active {
+	background: #333;
+}
+
+.btn-toggle,
+.btn-hide {
+	background: rgba(255, 255, 255, 0.1);
+	border: 0;
+	padding: 13px 18px;
+	font-size: 17px;
+	float: right;
+	color: #999;
+}
+
+.btn-hide:focus,
+.btn-hide:active {
+	box-shadow: 0 0 0;
+}
+
+.btn-toggle {
+	float: left;
+	margin-right: 15px;
+}
+
+/*	Sidebar   */
+#sidebar .btn-hide {
+	border-radius: 0 0 0 3px;
+}
+
 .sidebar-list {
 	list-style: none;
 	padding: 0;
@@ -131,7 +188,8 @@ h3 {
 	color: #fff;
 }
 
-#wikipediaBox {
+/*	Wikipedia Box  */
+#wikipedia-box {
 	display: none;
 	height: 316px;
 	width: 300px;
@@ -143,7 +201,7 @@ h3 {
 	text-align: center;
 }
 
-#wikipediaBoxHeader {
+#wikipedia-box-header {
 	text-transform: lowercase;
 	color: #bbb;
 	background: #555;
@@ -155,36 +213,25 @@ h3 {
 	border-radius: 0 5px 0 0;
 }
 
-#wikipediaContent {
+#wikipedia-box-header .btn-hide {
+	border-radius: 0 3px 0 0;	
+	margin-top: -14px;
+}
+
+#wikipedia-content {
 	padding: 15px;
 }
 
-#wikipediaContent span,
+#wikipedia-content span,
 .markerTitle {
 	text-transform: uppercase;
 	font-weight: 900;
 	color: #555;
 }
 
-#wikipediaBoxHeader .btn-hide {
-	margin-top: -14px;
-}
-
 .markerTitle {
 	letter-spacing: 1px;
 	font-family: 'Lato', sans-serif;
-}
-
-.btn-primary {
-	background: #F29A1A;
-	color: #fff;
-	width: 100%;
-}
-
-.btn-primary:hover,
-.btn-primary:focus,
-.btn-primary:active {
-	background: #333;
 }
 
 .thumbnail {
@@ -193,45 +240,13 @@ h3 {
 	margin: 15px auto;
 }
 
-.btn-hide {
-	background: rgba(255, 255, 255, 0.1);
-	border: 0;
-	border-radius: 0 3px 0 0;
-	padding: 8px 18px;
-	font-size: 24px;
-	float: right;
-	color: #999;
-	font-weight: 100;
-}
-
-.btn-hide:focus,
-.btn-hide:active {
-	box-shadow: 0 0 0;
-}
-
-.btn-toggle {
-	background: #333;
-	color: #fff;
-	border-radius: 3px;
-	padding: 8px 18px;
-	z-index: 9998;
-	border: 0;
-	font-size: 24px;
-	float: left;
-}
-
-.error {
-	color: #F7584C;
-}
-
-/* from small devices down 
- */
+/*	Media Queries  */
 @media (max-width: 991px) {
-	#wikipediaBox {
+	#wikipedia-box {
 		margin-top: 80%;
 	}
 
-	.sidebar {
+	#sidebar {
 		position: absolute;
 		z-index: 9999;
 		height: 100%;
@@ -239,7 +254,7 @@ h3 {
 		transition: 0.8s;
 	}
 
-	.mobile-header {
+	#mobile-header {
 		display: block;
 		transition: 0.8s;
 	}
@@ -253,11 +268,9 @@ h3 {
 		font-weight: 300;
 	}
 }
-/* from x-small devices down 
- */
-@media (max-width: 767px) { 
 
-	#wikipediaBox {
+@media (max-width: 767px) { 
+	#wikipedia-box {
 		margin-top: 65%;
 	}
 }
