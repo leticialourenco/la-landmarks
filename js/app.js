@@ -63,11 +63,18 @@ var GoogleMap = function() {
 };
 
 GoogleMap.prototype.initMap = function() {
-	var mapCenter = { lat: 34.076139, lng: -118.330000 };
+	var mapCenter = { lat: 34.039809, lng: -118.308810 };
+	var zoom = 12;
+	/* Define different center for larger screens
+	 */
+	if ($(window).width() > 600) { 
+		mapCenter = { lat: 33.974880, lng: -118.300283 };
+		if ($(window).width() > 1600) { zoom = 13; }
+	}
 	/* Create a map object
 	 */
 	this.map = new google.maps.Map(document.getElementById('map'), {
-		zoom: 12,
+		zoom: zoom,
 		center: mapCenter,
 		draggable: true
 	});	
@@ -207,6 +214,11 @@ var ViewModel = function() {
 	this.openInfo = function(clickedLocation) {
 		google.maps.event.trigger(map.mapMarkers[clickedLocation.index()], 'click');
 		self.loadWikipediaData(initialLocations[clickedLocation.index()]);
+		/* Hide the sidebar on mobiles to give room for the info
+		 */
+		if ($(window).width() < 992) {
+			self.hideSidebar();
+		}
 	};
 	/* Repopulates the sidebar list with data stored
 	 * on google maps mapMarkers array (already filtered)
@@ -240,18 +252,6 @@ var ViewModel = function() {
 		self.locationList.removeAll();
 		self.pushMarkersIntoList();
 		self.hideWikipediaBox();
-	};
-
-	this.first = function(obj) {
-		for(var i in obj) return i;
-	};
-
-	this.showWikipediaBox = function () {
-		$('#wikipediaBox').show();
-	};
-
-	this.hideWikipediaBox = function () {
-		$('#wikipediaBox').hide();
 	};
 
 	this.loadWikipediaData = function (locationObj) {
@@ -292,6 +292,32 @@ var ViewModel = function() {
 	       }
 	    });
 	}
+
+	this.first = function(obj) {
+		for(var i in obj) return i;
+	};
+
+	this.showWikipediaBox = function () {
+		$('#wikipediaBox').show();
+	};
+
+	this.hideWikipediaBox = function () {
+		$('#wikipediaBox').hide();
+	};
+
+	this.showSidebar = function () {
+		$('.sidebar').show();
+		$('.mobile-header').hide();
+		self.hideWikipediaBox();
+	};
+
+	this.hideSidebar = function () {
+		$('.sidebar').hide();
+		$('.mobile-header').show();
+	};
+	/* Refresh page when window is resized
+	 */
+	$(window).resize(function(){location.reload();});
 };
 
 /* Links view associations with ViewModel
