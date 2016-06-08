@@ -103,6 +103,10 @@ GoogleMap.prototype.addMarker = function(locationObj, index) {
 		setTimeout(function() {
 		    marker.setAnimation(null);
 		}, 700);
+		/* Call the loadWikipediaData to get wikipedia content
+	 	 * referent to the clicked location
+	 	 */
+		viewModel.loadWikipediaData(this);
 	});
 	/* Add newly created Marker instance to mapMarkers array
 	 */			
@@ -232,12 +236,9 @@ var ViewModel = function() {
 
 	/* Called when some location on the view list is clicked
 	 * triggers a click event on the clickedLocation marker
-	 * Call the loadWikipediaData to get wikipedia content
-	 * referent to the clicked location
 	 */
 	this.openInfo = function(clickedLocation) {
 		google.maps.event.trigger(map.mapMarkers[clickedLocation.index()], 'click');
-		self.loadWikipediaData(map.mapMarkers[clickedLocation.index()]);
 		/* Hide the sidebar on mobiles to give room for the info
 		 */
 		if ($(window).width() < 992) {
