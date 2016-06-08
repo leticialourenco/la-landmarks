@@ -13,7 +13,7 @@
 		<div class="container-fluid">
 			<div class="row">
 				<!-- START SIDEBAR -->
-				<div id="sidebar" class="col-xs-10 col-sm-5 col-md-4 col-lg-3">
+				<div id="sidebar" class="col-xs-10 col-sm-5 col-md-4 col-lg-3 sidebar">
 
 					<button data-bind="click: hideSidebar" class="hidden-md hidden-lg btn-hide">
 						<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
@@ -26,39 +26,39 @@
 					  	</button>
 
 						<ul class="dropdown-menu" aria-labelledby="category-filter">					    
-							<li><a href="#" data-bind="click: filterByCategory('art')">Art</a></li>
-							<li><a href="#" data-bind="click: filterByCategory('entertainment')">Entertainment</a></li>
-							<li><a href="#" data-bind="click: filterByCategory('science')">Science</a></li>		    
-							<li><a href="#" data-bind="click: filterByCategory('sport')">Sport</a></li>
-							<li role="separator" class="divider"></li>
-							<li><a href="#" data-bind="click: filterByCategory('all')">See All</a></li>
+							<li class="dropdown-list"><a href="#" class="dropdown-link" data-bind="click: filterByCategory('art')">Art</a></li>
+							<li class="dropdown-list"><a href="#" class="dropdown-link" data-bind="click: filterByCategory('entertainment')">Entertainment</a></li>
+							<li class="dropdown-list"><a href="#" class="dropdown-link" data-bind="click: filterByCategory('science')">Science</a></li>		    
+							<li class="dropdown-list"><a href="#" class="dropdown-link" data-bind="click: filterByCategory('sport')">Sport</a></li>
+							<li class="dropdown-list" role="separator" class="divider"></li>
+							<li class="dropdown-list"><a href="#" class="dropdown-link" data-bind="click: filterByCategory('all')">See All</a></li>
 						</ul>
 					</div>
 					<!-- fields separator -->
 					<div class="separator">
-						<em>- - - - - <span>or</span> - - - - -</em>
+						<em>- - - - - <span class="separator-span">or</span> - - - - -</em>
 					</div>
 					<!-- search box -->
 					<div class="input-group">
-				     	<input type="text" data-bind="value: query, valueUpdate: 'keyup'" class="form-control" placeholder="Search...">
+				     	<input type="text" data-bind="value: query, valueUpdate: 'keyup'" class="form-control search-text-input" placeholder="Search...">
 
 				    	<span class="input-group-btn">
-				        	<button class="btn btn-default" type="button">
-				        		<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+				        	<button class="btn btn-default input-group-button" type="button">
+				        		<span class="glyphicon glyphicon-search input-group-span" aria-hidden="true"></span>
 				        	</button>
 				      	</span>
 				    </div>
 				    <!-- location list -->
-					<ul data-bind="foreach: locationList" class="sidebar-list">
-						<li data-bind="click: $parent.openInfo"><a data-bind="text: title"></a></li>
+					<ul data-bind="foreach: locationList" class="sidebar-menu">
+						<li data-bind="click: $parent.openInfo" class="sidebar-list"><a data-bind="text: title" class="sidebar-link"></a></li>
 					</ul>
 				</div>
 				<!-- END SIDEBAR -->
 
 				<!-- START MAIN -->
-				<div id="main" class="col-xs-12 col-sm-12 col-md-8 col-lg-9">
+				<div class="col-xs-12 col-sm-12 col-md-8 col-lg-9 main">
 					<!-- mobile site header -->
-					<div id="mobile-header" class="hidden-md hidden-lg">
+					<div id="mobile-header" class="hidden-md hidden-lg mobile-header">
 
 						<button data-bind="click: showSidebar" class="btn-toggle">
 							<span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span>
@@ -67,17 +67,17 @@
 						<p class="toggle-msg">Display options</p>
 					</div>
 					<!-- wikipedia information box -->
-					<div id="wikipedia-box" class="col-xs-12">
-						<h4 id="wikipedia-box-header">Provided by Wikipedia.org 
+					<div id="wikipedia-box" class="col-xs-12 wikipedia-box">
+						<h4 class="wikipedia-box-header">Provided by Wikipedia.org 
 
 						<button data-bind="click: hideElement($('#wikipedia-box'))" class="btn-hide">
 							<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
 						</button></h4>
 
-						<div id="wikipedia-content"></div>
+						<div id="wikipedia-content" class="wikipedia-content"></div>
 					</div>
 					<!-- google maps -->
-					<div id="map" class="col-xs-12"></div>
+					<div id="map" class="col-xs-12 map"></div>
 				</div>
 				<!-- END MAIN -->
 			</div>

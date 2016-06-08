@@ -286,7 +286,7 @@ var ViewModel = function() {
 		 * and append a header containint locationObj title
 		 */
 		self.wikipediaContent.text('');
-		self.wikipediaContent.append('<span>' + locationObj.title + '</span>');  	
+		self.wikipediaContent.append('<span class="wikipedia-location-title">' + locationObj.title + '</span>');  	
 		/* Prepares the wikipedias' URl for the AJAX request
 		 */	
 		var locationQuery = locationObj.title.split(' ').join('+'); 

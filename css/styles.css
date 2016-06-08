@@ -1,9 +1,10 @@
 @import url(https://fonts.googleapis.com/css?family=Oswald:400,300,700|Lato:400,100,300,700,900);
 
 /*	 General   */
-body, html{
+body, 
+html {
 	height: 100%;
-	font-family: 'Lato', sans-serif;
+	font-family: "Lato", sans-serif;
 	overflow: hidden;
 }
 
@@ -20,7 +21,7 @@ h3 {
 	color: #fff;
 	text-transform: uppercase;
 	letter-spacing: 2px;
-	font-family: 'Oswald', sans-serif;
+	font-family: "Oswald", sans-serif;
 	font-size: 30px;
 }
 
@@ -34,18 +35,18 @@ h3 {
 }
 
 /*	Page Structure 	*/
-#main {
+.main {
 	padding: 0;
 }
 
-#map {
+.map {
 	position: relative;
 	padding-bottom: 180%;
 	height: 0;
 	overflow: hidden;
 }  
 
-#sidebar {
+.sidebar {
 	background:#333;
 	padding: 0 0 50px;
 	height: 100%;
@@ -66,12 +67,12 @@ h3 {
 	letter-spacing: 1px;
 } 
 
-.dropdown-menu li {
+.dropdown-list {
 	padding: 0;
 	margin: 0;
 }
 
-.dropdown-menu a {
+.dropdown-link {
 	padding: 10px 20px!important;
 }
 
@@ -81,14 +82,14 @@ h3 {
 	padding: 10px 0;
 }
 
-.separator span {
+.separator-span {
 	padding: 0 10px;
 	letter-spacing: 1px;
 	font-size: 15px;
 }
 
-.input-group input,
-.input-group button,
+.search-text-input,
+.input-group-button,
 .btn-primary {
 	border-radius: 3px;
 	border: none;
@@ -97,20 +98,20 @@ h3 {
 	letter-spacing: 1px;
 }
 
-.input-group input:active,
-.input-group input:focus,
-.input-group button:active,
-.input-group button:focus {
+.search-text-input:active,
+.search-text-input:focus,
+.input-group-button:active,
+.input-group-button:focus {
 	box-shadow: 0 0 0;
 }
 
-.input-group span,
-.input-group button {
+.input-group-span,
+.input-group-button {
 	background: #eee;
 	border-radius: 0 3px 3px 0;
 }
 
-.input-group-btn button {
+.input-group-button {
 	color: #999;
 }
 
@@ -152,44 +153,42 @@ h3 {
 }
 
 /*	Sidebar   */
-#sidebar .btn-hide {
+.sidebar .btn-hide {
 	border-radius: 0 0 0 3px;
 }
 
-.sidebar-list {
+.sidebar-menu {
 	list-style: none;
 	padding: 0;
 	margin: 30px 0 0;
 }
 
-.sidebar-list li,
-.sidebar-list a {
+.sidebar-list,
+.sidebar-link {
 	width: 100%;
 	padding: 15px;
 	color: #ccc;
 	cursor: pointer;
-	text-decoration: none;
 }
 
-.sidebar-list li:hover,
-.sidebar-list li:focus,
-.sidebar-list li:active,
-.sidebar-list .active {
+.sidebar-list:hover,
+.sidebar-list:focus,
+.sidebar-list:active {
 	background: #F29A1A;
 }
 
-.sidebar-list a:hover,
-.sidebar-list a:focus,
-.sidebar-list a:active,
-.sidebar-list li:hover a,
-.sidebar-list li:focus a,
-.sidebar-list li:active a,
-.sidebar-list .active a {
+.sidebar-link:hover,
+.sidebar-link:focus,
+.sidebar-link:active,
+.sidebar-list:hover .sidebar-link,
+.sidebar-list:focus .sidebar-link,
+.sidebar-list:active .sidebar-link {
 	color: #fff;
+	text-decoration: none;
 }
 
 /*	Wikipedia Box  */
-#wikipedia-box {
+.wikipedia-box {
 	display: none;
 	height: 316px;
 	width: 300px;
@@ -201,7 +200,7 @@ h3 {
 	text-align: center;
 }
 
-#wikipedia-box-header {
+.wikipedia-box-header {
 	text-transform: lowercase;
 	color: #bbb;
 	background: #555;
@@ -213,16 +212,16 @@ h3 {
 	border-radius: 0 5px 0 0;
 }
 
-#wikipedia-box-header .btn-hide {
+.wikipedia-box-header .btn-hide {
 	border-radius: 0 3px 0 0;	
 	margin-top: -14px;
 }
 
-#wikipedia-content {
+.wikipedia-content {
 	padding: 15px;
 }
 
-#wikipedia-content span,
+.wikipedia-location-title,
 .markerTitle {
 	text-transform: uppercase;
 	font-weight: 900;
@@ -231,7 +230,7 @@ h3 {
 
 .markerTitle {
 	letter-spacing: 1px;
-	font-family: 'Lato', sans-serif;
+	font-family: "Lato", sans-serif;
 }
 
 .thumbnail {
@@ -242,11 +241,11 @@ h3 {
 
 /*	Media Queries  */
 @media (max-width: 991px) {
-	#wikipedia-box {
+	.wikipedia-box {
 		margin-top: 80%;
 	}
 
-	#sidebar {
+	.sidebar {
 		position: absolute;
 		z-index: 9999;
 		height: 100%;
@@ -254,7 +253,7 @@ h3 {
 		transition: 0.8s;
 	}
 
-	#mobile-header {
+	.mobile-header {
 		display: block;
 		transition: 0.8s;
 	}
@@ -270,7 +269,13 @@ h3 {
 }
 
 @media (max-width: 767px) { 
-	#wikipedia-box {
+	.wikipedia-box {
 		margin-top: 65%;
+	}
+}
+
+@media screen and (orientation:landscape) {
+	.wikipedia-box {
+		margin-top: 0;
 	}
 }
