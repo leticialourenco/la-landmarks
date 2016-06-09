@@ -74,7 +74,11 @@
 							<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
 						</button></h4>
 
-						<div id="wikipedia-content" class="wikipedia-content"></div>
+						<div class="wikipedia-content">
+							<span data-bind="text: wikipediaTitle" class="wikipedia-location-title"></span>
+							<img data-bind="attr: { src: wikipediaImgSrc }" class="thumbnail">
+							<a data-bind="attr: { href: wikipediaUrl }" class="btn btn-primary btn-box" target="_blank">Read Article</a>
+						</div>
 					</div>
 					<!-- google maps -->
 					<div id="map" class="col-xs-12 map"></div>

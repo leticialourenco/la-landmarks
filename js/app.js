@@ -66,12 +66,15 @@ var GoogleMap = function() {
 
 GoogleMap.prototype.initMap = function() {
 	var mapCenter = { lat: 34.039809, lng: -118.308810 };
-	var zoom = 12;
+	var zoom = 11;
 	/* Define different center for larger screens
 	 */
 	if ($(window).width() > 600) { 
 		mapCenter = { lat: 33.974880, lng: -118.300283 };
-		if ($(window).width() > 1600) { zoom = 13 };
+		var zoom = 12;
+		if ($(window).width() > 1600) { 
+			zoom = 13 ;
+		}
 	}
 	/* Create a map object
 	 */
@@ -103,11 +106,11 @@ GoogleMap.prototype.addMarker = function(locationObj, index) {
 		/* Cuts the animation time
 		 */ 
 		setTimeout(function() {
-		    marker.setAnimation(null);
+			marker.setAnimation(null);
 		}, 700);
 		/* Call the loadWikipediaData to get wikipedia content
-	 	 * referent to the clicked location
-	 	 */
+		 * referent to the clicked location
+		 */
 		viewModel.loadWikipediaData(this);
 	});
 	/* Add newly created Marker instance to mapMarkers array
@@ -214,7 +217,6 @@ var ViewModel = function() {
 	this.wikipediaBox = $('#wikipedia-box');
 	this.sidebar = $('#sidebar');
 	this.mobileHeader = $('#mobile-header');
-	this.wikipediaContent = $('#wikipedia-content');
 	
 	this.showElement = function(element) { element.show(); };
 	this.hideElement = function(element) { element.hide(); };
@@ -278,14 +280,15 @@ var ViewModel = function() {
 		self.pushMarkersIntoList();
 		self.hideElement(self.wikipediaBox);
 	};
+	/* Create observables to manage the wikipedia box
+	 */
+	this.wikipediaTitle = ko.observable('');
+	this.wikipediaUrl = ko.observable('');
+	this.wikipediaImgSrc = ko.observable('');
 
 	this.loadWikipediaData = function(locationObj) {
 		self.showElement(self.wikipediaBox);
-		/* Clear element of previous information
-		 * and append a header containint locationObj title
-		 */
-		self.wikipediaContent.text('');
-		self.wikipediaContent.append('<span class="wikipedia-location-title">' + locationObj.title + '</span>');
+		self.wikipediaTitle(locationObj.title);
 		/* Prepares the wikipedias' URl for the AJAX request
 		 */	
 		var locationQuery = locationObj.title.split(' ').join('+'); 
@@ -294,25 +297,21 @@ var ViewModel = function() {
 		/* Handles error for the ajax request
 		 */
 		var wikiRequestTimeout = setTimeout(function(){
-			self.wikipediaContent.text('');
-			self.wikipediaContent.append('<p class="error">Failes to get Wikipedia resources</p>');
+			self.wikipediaTitle('Failes to get Wikipedia resources');
+			self.wikipediaUrl('');
+			self.wikipediaImgSrc('');
 		}, 3000);
-
+		
 		$.ajax({
 			url: wikiUrl,
 			dataType: "jsonp",
 			success: function(response) {
-				/* Gets data from the response JSON and
-	       		 * assembles the HTML to be rendered
-	       		 */
 				var pageId = self.first(response.query.pages);
 				var pageObj = response.query.pages[pageId];
-				var url = pageObj.fullurl;    
-				var imgSrc = pageObj.thumbnail.source;
-				var wikipediaHTMLInfo = '<img class="thumbnail" src="' + imgSrc + '">' +
-										'<a href="' + url + '" target="_blank" class="btn btn-primary btn-box">' +
-										' Read Article</a>';
-				self.wikipediaContent.append(wikipediaHTMLInfo);
+				
+				self.wikipediaUrl(pageObj.fullurl);
+				self.wikipediaImgSrc(pageObj.thumbnail.source);
+
 				clearTimeout(wikiRequestTimeout);
 			}
 		});
@@ -328,15 +327,11 @@ function GoogleMapsSuccess() {
 	map = new GoogleMap();
 	/* Links view associations with ViewModel
 	 */
-	ko.applyBindings( viewModel );
+	ko.applyBindings(viewModel);
 	viewModel.query.subscribe(viewModel.liveSearch);
 };
 /* Handles error on GoogleMaps
  */
 function GoogleMapsError() {
-	/* Using jQuery to handle this error
-	 * avoiding the need of creating a view model
-	 * for this only reason
-	 */
-	$('#map').append('<p class="error">Failes to load GoogleMaps resources</p>');
+	window.alert("Failes to load GoogleMaps resources.");
 }
