@@ -32,6 +32,8 @@ h3 {
 
 .error {
 	color: #F7584C;
+	text-align: center;
+	padding: 10px 0;
 }
 
 /*	Page Structure 	*/

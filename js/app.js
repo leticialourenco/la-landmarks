@@ -51,6 +51,8 @@ var initialLocations = [
 	}
 ];
 
+var map = null;
+
 /* Set up map model
  */
 var GoogleMap = function() {
@@ -69,7 +71,7 @@ GoogleMap.prototype.initMap = function() {
 	 */
 	if ($(window).width() > 600) { 
 		mapCenter = { lat: 33.974880, lng: -118.300283 };
-		if ($(window).width() > 1600) { zoom = 13; }
+		if ($(window).width() > 1600) { zoom = 13 };
 	}
 	/* Create a map object
 	 */
@@ -77,12 +79,12 @@ GoogleMap.prototype.initMap = function() {
 		zoom: zoom,
 		center: mapCenter,
 		draggable: true
-	});	
+	});
 };
 
-GoogleMap.prototype.addMarker = function(locationObj, index) {	
+GoogleMap.prototype.addMarker = function(locationObj, index) {
 	var self = this;
-	var coords = { lat: locationObj.lat, lng: locationObj.lng }
+	var coords = { lat: locationObj.lat, lng: locationObj.lng };
 	/* Create marker object
 	 */
 	var marker = new google.maps.Marker({
@@ -196,9 +198,6 @@ GoogleMap.prototype.populateMarkersBySearch = function(searchQuery) {
 		}	
 	}
 };
-/* Creates an instance of GoogleMap
- */
-var map = new GoogleMap;
 
 /* Sets up data model for locations
  */
@@ -286,42 +285,58 @@ var ViewModel = function() {
 		 * and append a header containint locationObj title
 		 */
 		self.wikipediaContent.text('');
-		self.wikipediaContent.append('<span class="wikipedia-location-title">' + locationObj.title + '</span>');  	
+		self.wikipediaContent.append('<span class="wikipedia-location-title">' + locationObj.title + '</span>');
 		/* Prepares the wikipedias' URl for the AJAX request
 		 */	
 		var locationQuery = locationObj.title.split(' ').join('+'); 
-		var wikiUrl = 'https://en.wikipedia.org/w/api.php?action=query&format=json&prop=info%7Cpageimages&titles='
-		+ locationQuery + '&inprop=url&piprop=thumbnail&pithumbsize=300';
+		var wikiUrl = 'https://en.wikipedia.org/w/api.php?action=query&format=json&prop=info%7Cpageimages&titles=' +
+		locationQuery + '&inprop=url&piprop=thumbnail&pithumbsize=300';
 		/* Handles error for the ajax request
 		 */
 		var wikiRequestTimeout = setTimeout(function(){
 			self.wikipediaContent.text('');
-	        self.wikipediaContent.append('<p class="error">Failes to get Wikipedia resources</p>');
-	    }, 3000);
+			self.wikipediaContent.append('<p class="error">Failes to get Wikipedia resources</p>');
+		}, 3000);
 
 		$.ajax({
-	       url: wikiUrl,
-	       dataType: "jsonp",
-	       success: function(response) {
-	       		/* Gets data from the response JSON and
+			url: wikiUrl,
+			dataType: "jsonp",
+			success: function(response) {
+				/* Gets data from the response JSON and
 	       		 * assembles the HTML to be rendered
 	       		 */
-	       	    var pageId = self.first(response.query.pages);
-	            var pageObj = response.query.pages[pageId];
-	            var url = pageObj.fullurl;    
-	            var imgSrc = pageObj.thumbnail.source;
-	            var wikipediaHTMLInfo = '<img class="thumbnail" src="' + imgSrc + '">' +
-	    							 	'<a href="' + url + '" target="_blank" class="btn btn-primary btn-box">' + 
-	    							  	' Read Article</a>';
-	    		self.wikipediaContent.append(wikipediaHTMLInfo);            
-	            clearTimeout(wikiRequestTimeout);
-	       }
-	    });
+				var pageId = self.first(response.query.pages);
+				var pageObj = response.query.pages[pageId];
+				var url = pageObj.fullurl;    
+				var imgSrc = pageObj.thumbnail.source;
+				var wikipediaHTMLInfo = '<img class="thumbnail" src="' + imgSrc + '">' +
+										'<a href="' + url + '" target="_blank" class="btn btn-primary btn-box">' +
+										' Read Article</a>';
+				self.wikipediaContent.append(wikipediaHTMLInfo);
+				clearTimeout(wikiRequestTimeout);
+			}
+		});
 	};
 };
 
-/* Links view associations with ViewModel
- */
 var viewModel = new ViewModel();
-viewModel.query.subscribe(viewModel.liveSearch);
-ko.applyBindings( viewModel );
+/* GoogleMaps callback
+ */
+function GoogleMapsSuccess() {
+	/* Creates an instance of GoogleMap
+	 */
+	map = new GoogleMap();
+	/* Links view associations with ViewModel
+	 */
+	ko.applyBindings( viewModel );
+	viewModel.query.subscribe(viewModel.liveSearch);
+};
+/* Handles error on GoogleMaps
+ */
+function GoogleMapsError() {
+	/* Using jQuery to handle this error
+	 * avoiding the need of creating a view model
+	 * for this only reason
+	 */
+	$('#map').append('<p class="error">Failes to load GoogleMaps resources</p>');
+}
